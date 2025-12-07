@@ -844,16 +844,9 @@
                                 playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
                             })
                             .catch(error => {
-                                audio.load();
-                                setTimeout(() => {
-                                    audio.play()
-                                        .then(() => {
-                                            playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-                                        })
-                                        .catch(error => {
-                                            alert("无法播放音频: " + error.message);
-                                        });
-                                }, 100);
+                                console.error("无法播放音频: ", error);
+                                // 现代浏览器需要用户手势才能播放音频，显示提示
+                                alert("浏览器阻止了音频自动播放，请手动点击播放按钮");
                             });
                     } else {
                         audio.pause();
@@ -897,25 +890,9 @@
                 });
                 
                 // 监听音频错误事件
-                audio.addEventListener('error', function() {
+                audio.addEventListener('error', function(e) {
+                    console.error("音频加载错误:", e);
                 });
-                
-                // 页面点击时自动播放音频（根据浏览器政策，需要用户交互才能播放音频）
-                document.body.addEventListener('click', function autoPlayAudio() {
-                    if (audio.paused) {
-                        audio.play()
-                            .then(() => {
-                                playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-                                document.body.removeEventListener('click', autoPlayAudio); // 避免重复触发
-                            })
-                            .catch(error => {
-                                console.log("自动播放失败，需要用户手动点击播放: ", error);
-                                document.body.removeEventListener('click', autoPlayAudio); // 避免重复触发
-                            });
-                    } else {
-                        document.body.removeEventListener('click', autoPlayAudio); // 避免重复触发
-                    }
-                }, { once: true }); // 只监听一次点击
             }
             
             // 打字效果函数
