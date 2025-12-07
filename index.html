@@ -266,6 +266,39 @@
         .typing-text li {
             margin: 0.5em 0;
         }
+        
+        /* 个人信息区域增强样式 */
+        .profile-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .profile-section h3 {
+            border-bottom: 2px solid rgba(106, 17, 203, 0.3);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .experience-item {
+            border-left: 3px solid #6a11cb;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .experience-item:hover {
+            transform: translateX(5px);
+            background-color: rgba(106, 17, 203, 0.05);
+        }
+        
+        .skill-badge {
+            display: inline-block;
+            margin: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            border-radius: 9999px;
+            color: white;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body class="text-gray-800 dark:text-gray-200 min-h-screen">
@@ -378,27 +411,79 @@
                 </div>
                 </div>
                 
-                <!-- 活动图表 -->
+                <!-- 个人技能与成就 -->
                 <div class="glass-panel bg-white/30 dark:bg-gray-800/30 rounded-2xl shadow-xl p-6 mt-6 card-hover animate-fade-in" style="animation-delay: 0.2s;">
-                    <h3 class="text-lg font-semibold mb-3">GitHub 活动概览</h3>
-                    <div class="h-64">
-                        <canvas id="activityChart"></canvas>
+                    <h2 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fa-solid fa-rocket text-primary dark:text-primary-dark mr-2"></i>
+                        技能与成就
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gradient-to-r from-primary/20 to-secondary/20 dark:from-primary-dark/20 dark:to-secondary-dark/20 rounded-xl p-5">
+                            <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                <i class="fa-solid fa-code text-primary dark:text-primary-dark mr-2"></i>
+                                编程技能
+                            </h3>
+                            <ul class="space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fa-solid fa-check-circle text-green-500 mr-2"></i>
+                                    <span>Python - 熟练掌握，有丰富的项目经验</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa-solid fa-check-circle text-green-500 mr-2"></i>
+                                    <span>JavaScript/TypeScript - 熟练使用前端框架</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa-solid fa-check-circle text-green-500 mr-2"></i>
+                                    <span>Web开发 - Flask、Django等后端框架</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa-solid fa-check-circle text-green-500 mr-2"></i>
+                                    <span>数据库 - MySQL、PostgreSQL、MongoDB</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-gradient-to-r from-primary/20 to-secondary/20 dark:from-primary-dark/20 dark:to-secondary-dark/20 rounded-xl p-5">
+                            <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                <i class="fa-solid fa-trophy text-primary dark:text-primary-dark mr-2"></i>
+                                项目成就
+                            </h3>
+                            <ul class="space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fa-solid fa-star text-yellow-500 mr-2"></i>
+                                    <span>开发了多个开源项目，获得14.9k+ stars</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa-solid fa-star text-yellow-500 mr-2"></i>
+                                    <span>创建了高效的自动化工具和数据处理脚本</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa-solid fa-star text-yellow-500 mr-2"></i>
+                                    <span>构建了用户友好的Web应用和API</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa-solid fa-star text-yellow-500 mr-2"></i>
+                                    <span>持续学习新技术，保持代码质量</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- 右侧内容区域 -->
             <div class="lg:col-span-2">
-                <!-- README 内容 -->
+                <!-- 个人介绍区域 -->
                 <div class="glass-panel bg-white/30 dark:bg-gray-800/30 rounded-2xl shadow-xl p-6 readme-content">
                     <h2 class="text-2xl font-bold mb-4 flex items-center">
-                        <i class="fa-solid fa-file-lines text-primary dark:text-primary-dark mr-2"></i>
+                        <i class="fa-solid fa-user text-primary dark:text-primary-dark mr-2"></i>
                         个人介绍
                     </h2>
                     <div class="prose dark:prose-invert max-w-none" id="readme-content">
                         <div id="typing-container" class="typing-text"></div>
                     </div>
                 </div>
+                
+                
 
                 <!-- 最近仓库 -->
                 <div class="glass-panel bg-white/30 dark:bg-gray-800/30 rounded-2xl shadow-xl p-6 mt-6 card-hover animate-fade-in" style="animation-delay: 0.4s;">
@@ -703,6 +788,17 @@
                 observer.observe(card);
             });
             
+            // 添加经验项目悬停效果
+            document.querySelectorAll('.experience-item').forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+            
             // 打字效果函数
             function typeWriter(element, text, speed = 40, callback = null) {
                 element.innerHTML = ''; // 清空元素内容
@@ -730,18 +826,18 @@
             
             // 自定义个人介绍内容
             const content = [
-                { type: 'h1', text: '个人主页', delay: 1500 },
-                { type: 'p', text: '欢迎来到我的个人主页！这里是我展示自己的空间。', delay: 3000 },
-                { type: 'h2', text: '关于我', delay: 5000 },
-                { type: 'p', text: '我是一名热爱编程的开发者，喜欢探索新技术和解决各种有趣的问题。', delay: 6000 },
-                { type: 'p', text: '我专注于Python和Web开发，致力于创建高效、优雅的解决方案。', delay: 7500 },
-                { type: 'h2', text: '技术栈', delay: 8500 },
-                { type: 'list', items: ['Python', 'JavaScript', 'HTML/CSS', 'Flask', 'Vue.js', 'React', 'SQL'], delay: 9500 },
-                { type: 'h2', text: '项目经验', delay: 10000 },
-                { type: 'p', text: '我开发过多个Web应用和工具，涉及数据分析、自动化脚本等领域。', delay: 11000 },
-                { type: 'p', text: '每个项目都是我学习和成长的见证。', delay: 12500 },
-                { type: 'h2', text: '兴趣爱好', delay: 13500 },
-                { type: 'p', text: '除了编程，我还喜欢阅读、旅行和摄影。', delay: 14000 },
+                { type: 'h1', text: '你好，我是 memories-coder', delay: 1500 },
+                { type: 'p', text: '一名充满激情的软件开发者，专注于创建高效、优雅的解决方案。', delay: 3000 },
+                { type: 'h2', text: '关于我', delay: 4500 },
+                { type: 'p', text: '我热爱编程，喜欢探索新技术并解决复杂的问题。', delay: 5500 },
+                { type: 'p', text: '我相信技术能够创造更美好的世界，致力于用代码实现这一愿景。', delay: 7000 },
+                { type: 'h2', text: '专业技能', delay: 8000 },
+                { type: 'list', items: ['Python开发', 'Web应用开发', 'API设计', '数据库管理', '自动化脚本'], delay: 8500 },
+                { type: 'h2', text: '开发理念', delay: 10000 },
+                { type: 'p', text: '注重代码质量，追求简洁优雅的解决方案。', delay: 10500 },
+                { type: 'p', text: '持续学习，拥抱变化，与开源社区共同成长。', delay: 11500 },
+                { type: 'h2', text: '个人兴趣', delay: 12500 },
+                { type: 'p', text: '除了编程，我还喜欢阅读技术书籍、参与开源项目和探索新技术。', delay: 13000 },
             ];
             
             content.forEach(item => {
