@@ -19,6 +19,36 @@
         link[rel="icon"] {
             filter: url(#roundAvatar);
         }
+        
+        /* 音频播放器样式 */
+        #audio-player {
+            display: none;
+        }
+        
+        #audio-volume {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        
+        #audio-volume::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #6a11cb;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        #audio-volume::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #6a11cb;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
     </style>
     
     <!-- Tailwind CSS -->
@@ -351,6 +381,17 @@
                     <i class="fa-solid fa-moon dark:hidden text-gray-700"></i>
                     <i class="fa-solid fa-sun hidden dark:block text-yellow-400"></i>
                 </button>
+                
+                <!-- 音频播放器按钮 -->
+                <div class="flex items-center space-x-2">
+                    <button id="audio-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors relative">
+                        <i class="fa-solid fa-music text-gray-700 dark:text-gray-300"></i>
+                        <span class="sr-only">切换音乐播放</span>
+                    </button>
+                    <input type="range" id="audio-volume" min="0" max="1" step="0.01" value="0.5" 
+                        class="w-20 h-1.5 rounded-lg appearance-none cursor-pointer bg-gray-300 dark:bg-gray-600 accent-primary dark:accent-primary-dark">
+                </div>
+                
                 <a href="hhttps://github.com/memories-coder" target="_blank" rel="noopener noreferrer" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
                     <i class="fa-brands fa-github text-xl"></i>
                 </a>
@@ -646,6 +687,12 @@
     <!-- 动画粒子效果 -->
     <div id="particles-js" class="fixed top-0 left-0 w-full h-full pointer-events-none -z-20"></div>
 
+    <!-- 隐藏的音频元素 -->
+    <audio id="audio-player" loop>
+        <source src="music.mp3" type="audio/mpeg">
+        您的浏览器不支持音频播放。
+    </audio>
+    
     <!-- 引入 particles.js 库 -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     
@@ -878,6 +925,60 @@
                     }
                 });
             }
+            
+            });
+            
+            // 音频播放控制
+            const audioPlayer = document.getElementById('audio-player');
+            const audioToggle = document.getElementById('audio-toggle');
+            const audioVolume = document.getElementById('audio-volume');
+            let isPlaying = false;
+            
+            // 设置初始音量
+            audioPlayer.volume = audioVolume.value;
+            
+            // 音量控制事件
+            audioVolume.addEventListener('input', function() {
+                audioPlayer.volume = this.value;
+            });
+            
+            // 音频播放/暂停切换
+            audioToggle.addEventListener('click', function() {
+                if (isPlaying) {
+                    audioPlayer.pause();
+                    isPlaying = false;
+                    // 更新图标为播放状态
+                    audioToggle.innerHTML = '<i class="fa-solid fa-music text-gray-700 dark:text-gray-300"></i>';
+                } else {
+                    audioPlayer.play().then(() => {
+                        isPlaying = true;
+                        // 更新图标为暂停状态
+                        audioToggle.innerHTML = '<i class="fa-solid fa-pause text-gray-700 dark:text-gray-300"></i>';
+                    }).catch(e => {
+                        console.log("音频播放被阻止:", e);
+                        // 如果播放失败，保持播放图标
+                        audioToggle.innerHTML = '<i class="fa-solid fa-music text-gray-700 dark:text-gray-300"></i>';
+                    });
+                }
+            });
+            
+            // 尝试在页面加载后自动播放（可能被浏览器策略阻止）
+            window.addEventListener('load', function() {
+                // 延迟一小段时间再尝试播放
+                setTimeout(() => {
+                    if (!isPlaying) {
+                        audioPlayer.play().then(() => {
+                            isPlaying = true;
+                            // 更新图标为暂停状态
+                            audioToggle.innerHTML = '<i class="fa-solid fa-pause text-gray-700 dark:text-gray-300"></i>';
+                        }).catch(e => {
+                            console.log("自动播放被阻止，需要用户交互:", e);
+                            // 自动播放失败时，保持播放图标
+                            audioToggle.innerHTML = '<i class="fa-solid fa-music text-gray-700 dark:text-gray-300"></i>';
+                        });
+                    }
+                }, 1000); // 延迟1秒后尝试自动播放
+            });
             
             // 添加页面滚动动画
             const observer = new IntersectionObserver((entries) => {
